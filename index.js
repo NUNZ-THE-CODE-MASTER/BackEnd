@@ -1,11 +1,26 @@
 const express = require('express');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const path = require('path');
 const cors = require('cors');
 app.use(cors());
 app.use(express.json());
 
+////Save file////
+const fs = require('fs');
+//const path = require('path');
+let products = [];
+const filepath = path.join(__dirname, 'products.json');
+if (fs.existsSync(filepath)) {
+    const data = fs.readFileSync(filepath, 'utf8');
+    products = JSON.parse(data);
+}   else {
+    products = [
+        { id: 1, name: 'Product 1', price: 10.99 },
+        { id: 2, name: 'Product 2', price: 15.99 }
+    
+    ];
+}
 //Load and serve static images
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
