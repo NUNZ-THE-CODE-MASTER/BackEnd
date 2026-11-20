@@ -32,6 +32,8 @@ console.log(myProduct);
 
 // use morgan library
 var morgan = require('morgan')
+//above 404 handler to assist app.put
+const { MongoClient, ObjectId } = require("mongodb");
 
 const { MongoClient } = require("mongodb");
 const client = new
@@ -90,13 +92,17 @@ app.post("/orders", async function (req, res) {
   res.json(result);
 });
 
-app.put("/", (req, res)=>{
-    res.send("Let's change an element");    
-})
+app.put("/collections/Products/:id", async function (req, res) {
+    const query = { _id: new ObjectId(req.params.id) };
+    const result = await db1.collection("Products").updateOne(query, { $set: req.body });
+    res.json(result);
+});
 
-app.delete("/", (req, res)=>{
-    res.send("Let's delete an element");
-})
+app.delete("/orders/:id", async function (req, res) {
+    const query = { _id: new ObjectId(req.params.id) };
+    const result = await db1.collection("orders").deleteOne(query);
+    res.json(result);
+});
 
 app.use((req, res) => {
     res.status(404).send("Page not found !")
