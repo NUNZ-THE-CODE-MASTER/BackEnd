@@ -1,3 +1,4 @@
+require('dotenv').config({ path: './config.env' });
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -34,7 +35,7 @@ var morgan = require('morgan')
 
 const { MongoClient } = require("mongodb");
 const client = new
-MongoClient("mongodb+srv://assenyange7_db_user:aba@cluster0.zmdxjdo.mongodb.net/");
+MongoClient(process.env.MONGODB_URI);
 
 let db1;
 async function connectToMongoDB() {
@@ -84,6 +85,11 @@ app.post("/names", function(request, response){
  response.json("New Name Recieved: " + body.firstname + " " + body.lastname);
 });
 
+app.post("/orders", async function (req, res) {
+  const result = await db1.collection("orders").insertOne(req.body);
+  res.json(result);
+});
+
 app.put("/", (req, res)=>{
     res.send("Let's change an element");    
 })
@@ -97,5 +103,5 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}/`);
+    console.log(`Server running on port ${PORT}/`);
 })
