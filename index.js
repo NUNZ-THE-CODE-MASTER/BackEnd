@@ -35,7 +35,6 @@ var morgan = require('morgan')
 //above 404 handler to assist app.put
 const { MongoClient, ObjectId } = require("mongodb");
 
-const { MongoClient } = require("mongodb");
 const client = new
 MongoClient(process.env.MONGODB_URI);
 
